@@ -38,7 +38,7 @@ def save_polygon_coordinates(poly_list, filepath, class_idx=0):
         with open(filepath, 'a+') as f:
             points = ""
             for lst in list_of_lists:
-                points += " ".join([str(int(c)) for c in lst])+" "
+                points += " ".join([str(c) for c in lst])+" "
             f.write(str(class_idx)+" "+points+"\n")
 
 
