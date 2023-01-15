@@ -9,17 +9,24 @@ import os
 import argparse
 
 
-def show_polygons(image, polygons, show=False):
+def show_polygons(image, polygons, show=True):
     fig, ax = plt.subplots()
     plt.imshow(np.zeros_like(image))
     polygons_list = []
     for poly in polygons:
         exterior = np.array(poly.exterior.coords)
+        exterior_norm = []
+        # flip x and y coordinates and normalize for each point of the polygon
         for e in exterior:
+            # swap coordinates
             e[[0, 1]] = e[[1, 0]]
-        polygons_list.append(exterior)
+            # normalize coordinates on image shape
+            x = e[0]/image.shape[0]
+            y = e[1]/image.shape[1]
+            exterior_norm.append([x, y])
+        polygons_list.append(exterior_norm)
         flipped_poly = Polygon(exterior)
-        ax.add_patch(PolygonPatch(flipped_poly, fc='blue', ec='black', alpha=0.9))
+        ax.add_patch(PolygonPatch(flipped_poly, fc='blue', ec='white', alpha=0.9))
     if show:
         plt.imshow(image)
         plt.show()
@@ -31,7 +38,7 @@ def save_polygon_coordinates(poly_list, filepath, class_idx=0):
         with open(filepath, 'a+') as f:
             points = ""
             for lst in list_of_lists:
-                points += " ".join([str(int(x)) for x in lst])+" "
+                points += " ".join([str(int(c)) for c in lst])+" "
             f.write(str(class_idx)+" "+points+"\n")
 
 
@@ -66,12 +73,13 @@ def process_folder(folder_path, labels_dir_path, image_extensions):
                 print(f'Saved {image_path} --> {txt_filename}')
 
 
-parser = argparse.ArgumentParser(description='')
-parser.add_argument('--images-dir-path', required=True, help='folder containing segmentation maps')
-parser.add_argument('--labels-dir-path', default='.', help='folder to save labels')
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='')
+    parser.add_argument('--images-dir-path', nargs='?', type=str, const='./test_inclusi_maschere', default='./test_inclusi_maschere', help='folder containing segmentation maps')
+    parser.add_argument('--labels-dir-path', nargs='?', type=str, const='./test_inclusi_labels', default='./test_inclusi_labels', help='folder to save labels')
 
-args = parser.parse_args()
-images_dir_path = args.images_dir_path
-labels_dir_path = args.labels_dir_path
-image_extensions = ['.jpg', '.png']
-process_folder(images_dir_path, labels_dir_path, image_extensions)
+    args = parser.parse_args()
+    images_dir_path = args.images_dir_path
+    labels_dir_path = args.labels_dir_path
+    image_extensions = ['.jpg', '.png']
+    process_folder(images_dir_path, labels_dir_path, image_extensions)
