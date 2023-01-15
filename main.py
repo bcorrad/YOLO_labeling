@@ -54,8 +54,11 @@ def segmentation_to_polygons(image):
     # Iterate over each contour
     for contour in contours:
         # Create a polygon from the contour
-        poly = Polygon(contour)
-        polygons.append(poly)
+        try:
+            poly = Polygon(contour)
+            polygons.append(poly)
+        except Exception as e:
+            print(e)
     return polygons
 
 
