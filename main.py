@@ -75,8 +75,8 @@ def process_folder(folder_path, labels_dir_path, image_extensions):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--images-dir-path', nargs='?', type=str, const='./test_inclusi_maschere', default='./test_inclusi_maschere', help='folder containing segmentation maps')
-    parser.add_argument('--labels-dir-path', nargs='?', type=str, const='./test_inclusi_labels', default='./test_inclusi_labels', help='folder to save labels')
+    parser.add_argument('--images-dir-path', nargs='?', type=str, default='./test_inclusi_maschere', help='folder containing segmentation maps')
+    parser.add_argument('--labels-dir-path', nargs='?', type=str, default='./test_inclusi_labels', help='folder to save labels')
 
     args = parser.parse_args()
     images_dir_path = args.images_dir_path
